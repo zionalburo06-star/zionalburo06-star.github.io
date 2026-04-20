@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lacrosse Shot Tracker | Zion Alburo</title>
+  <style>
+    /* ===== Reset & Base ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0a1628;
+      --royal: #1a3a6b;
+      --gold: #c9a227;
+      --cream: #faf8f2;
+      --white: #ffffff;
+      --gray: #888;
+      --light: #f0ede6;
+      --green: #2a7a4b;
+      --red: #b03030;
+    }
+
+    body {
+      font-family: 'Trebuchet MS', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      min-height: 100vh;
+    }
+
+    /* ===== Header ===== */
+    header {
+      background: linear-gradient(135deg, #0a1628, #1a3a6b);
+      text-align: center;
+      padding: 32px 20px 24px;
+      border-bottom: 3px solid var(--gold);
+      position: relative;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: bold;
+      color: white;
+      letter-spacing: 1px;
+    }
+
+    header p {
+      color: var(--gold);
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
+    .back-link {
+      position: absolute;
+      top: 16px;
+      left: 20px;
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 0.82rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* ===== Layout ===== */
+    .app-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 16px;
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 750px) {
+      .app-container { grid-template-columns: 1fr; }
+    }
+
+    /* ===== Cards ===== */
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 24px;
+    }
+
+    .card h2 {
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--gold);
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 10px;
+    }
+
+    /* ===== Stat Summary ===== */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .stat-bubble {
+      background: rgba(201,162,39,0.12);
+      border: 1px solid rgba(201,162,39,0.3);
+      border-radius: 6px;
+      text-align: center;
+      padding: 16px 8px;
+    }
+
+    .stat-bubble .num {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .stat-bubble .lbl {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.6);
+      margin-top: 6px;
+    }
+
+    /* ===== Goal Net ===== */
+    .net-section { margin-bottom: 24px; }
+
+    .net-section p {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .goal-net {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 4px;
+      background: rgba(255,255,255,0.08);
+      border: 2px solid rgba(255,255,255,0.25);
+      border-radius: 4px;
+      padding: 4px;
+      max-width: 320px;
+      margin: 0 auto;
+    }
+
+    .net-zone {
+      aspect-ratio: 1.6;
+      border-radius: 3px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.6);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.15s;
+      user-select: none;
+    }
+
+    .net-zone:hover { background: rgba(201,162,39,0.2); border-color: var(--gold); }
+    .net-zone.selected-save { background: rgba(42,122,75,0.4); border-color: #4caf50; }
+    .net-zone.selected-goal { background: rgba(176,48,48,0.4); border-color: #ef5350; }
+
+    .net-zone .zone-count {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: white;
+    }
+
+    .net-zone .zone-label {
+      font-size: 0.62rem;
+      color: rgba(255,255,255,0.45);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ===== Controls ===== */
+    .controls { display: flex; gap: 10px; flex-direction: column; }
+
+    label {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    select, input {
+      width: 100%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      padding: 10px 12px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-family: inherit;
+    }
+
+    select option { background: var(--navy); }
+
+    .toggle-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .toggle-btn {
+      padding: 12px;
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 4px;
+      background: transparent;
+      color: rgba(255,255,255,0.6);
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-family: inherit;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.15s;
+    }
+
+    .toggle-btn.active-save {
+      background: rgba(42,122,75,0.3);
+      border-color: #4caf50;
+      color: #81c784;
+    }
+
+    .toggle-btn.active-goal {
+      background: rgba(176,48,48,0.3);
+      border-color: #ef5350;
+      color: #e57373;
+    }
+
+    .log-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--gold);
+      color: var(--navy);
+      border: none;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      cursor: pointer;
+      font-family: inherit;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      transition: opacity 0.2s;
+      margin-top: 6px;
+    }
+
+    .log-btn:hover { opacity: 0.88; }
+    .log-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    /* ===== Save % Bar ===== */
+    .save-bar-wrap {
+      margin-top: 20px;
+    }
+
+    .save-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 6px;
+    }
+
+    .save-bar-bg {
+      height: 10px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .save-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green), #4caf50);
+      border-radius: 5px;
+      transition: width 0.4s ease;
+    }
+
+    /* ===== Log Table ===== */
+    .log-table-wrap {
+      max-height: 320px;
+      overflow-y: auto;
+    }
+
+    .log-table-wrap::-webkit-scrollbar { width: 5px; }
+    .log-table-wrap::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+    .log-table-wrap::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    th {
+      background: rgba(255,255,255,0.07);
+      color: var(--gold);
+      padding: 10px 12px;
+      text-align: left;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: sticky;
+      top: 0;
+    }
+
+    td {
+      padding: 9px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.8);
+    }
+
+    tr:hover td { background: rgba(255,255,255,0.04); }
+
+    .badge-save {
+      background: rgba(42,122,75,0.3);
+      color: #81c784;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+
+    .badge-goal {
+      background: rgba(176,48,48,0.3);
+      color: #e57373;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+
+    .delete-btn {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.25);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 2px 4px;
+      transition: color 0.15s;
+    }
+    .delete-btn:hover { color: #e57373; }
+
+    .empty-log {
+      text-align: center;
+      color: rgba(255,255,255,0.25);
+      padding: 40px 20px;
+      font-size: 0.88rem;
+    }
+
+    .clear-btn {
+      margin-top: 16px;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.4);
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      font-family: inherit;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.15s;
+    }
+    .clear-btn:hover { border-color: #e57373; color: #e57373; }
+
+    /* ===== Toast ===== */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(60px);
+      background: var(--gold);
+      color: var(--navy);
+      padding: 10px 24px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 0.88rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 999;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="lacrosse.html" class="back-link">← Lacrosse Page</a>
+  <h1>🥍 Shot Tracker</h1>
+  <p>Goalie Performance Logger · Zion Alburo</p>
+</header>
+
+<div class="app-container">
+
+  <!-- LEFT: Input Panel -->
+  <div>
+    <!-- Stats Summary -->
+    <div class="card" style="margin-bottom: 20px;">
+      <h2>Today's Session</h2>
+      <div class="stats-row">
+        <div class="stat-bubble">
+          <div class="num" id="totalShots">0</div>
+          <div class="lbl">Total Shots</div>
+        </div>
+        <div class="stat-bubble">
+          <div class="num" id="totalSaves">0</div>
+          <div class="lbl">Saves</div>
+        </div>
+        <div class="stat-bubble">
+          <div class="num" id="savePercent">—</div>
+          <div class="lbl">Save %</div>
+        </div>
+      </div>
+      <div class="save-bar-wrap">
+        <div class="save-bar-label">
+          <span>Save Percentage</span>
+          <span id="barLabel">No shots yet</span>
+        </div>
+        <div class="save-bar-bg">
+          <div class="save-bar-fill" id="saveBar" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Log Shot -->
+    <div class="card">
+      <h2>Log a Shot</h2>
+
+      <!-- Zone selector -->
+      <div class="net-section">
+        <p>Click a zone to target (optional)</p>
+        <div class="goal-net" id="goalNet">
+          <div class="net-zone" data-zone="top-left">
+            <span class="zone-count" id="zc-top-left">0</span>
+            <span class="zone-label">Top L</span>
+          </div>
+          <div class="net-zone" data-zone="top-center">
+            <span class="zone-count" id="zc-top-center">0</span>
+            <span class="zone-label">Top C</span>
+          </div>
+          <div class="net-zone" data-zone="top-right">
+            <span class="zone-count" id="zc-top-right">0</span>
+            <span class="zone-label">Top R</span>
+          </div>
+          <div class="net-zone" data-zone="bot-left">
+            <span class="zone-count" id="zc-bot-left">0</span>
+            <span class="zone-label">Bot L</span>
+          </div>
+          <div class="net-zone" data-zone="bot-center">
+            <span class="zone-count" id="zc-bot-center">0</span>
+            <span class="zone-label">Bot C</span>
+          </div>
+          <div class="net-zone" data-zone="bot-right">
+            <span class="zone-count" id="zc-bot-right">0</span>
+            <span class="zone-label">Bot R</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div>
+          <label>Shot Type</label>
+          <select id="shotType">
+            <option value="">— Select —</option>
+            <option value="Overhand">Overhand</option>
+            <option value="Sidearm">Sidearm</option>
+            <option value="Underhand">Underhand</option>
+            <option value="Bounce Shot">Bounce Shot</option>
+            <option value="Behind-the-Back">Behind-the-Back</option>
+            <option value="Off-Ball">Off-Ball</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Shooter Position</label>
+          <select id="shotPosition">
+            <option value="">— Select —</option>
+            <option value="Attack (Top)">Attack (Top)</option>
+            <option value="Attack (Left Wing)">Attack (Left Wing)</option>
+            <option value="Attack (Right Wing)">Attack (Right Wing)</option>
+            <option value="Crease">Crease</option>
+            <option value="Midfield">Midfield</option>
+            <option value="Fast Break">Fast Break</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Outcome</label>
+          <div class="toggle-row">
+            <button class="toggle-btn" id="btnSave" onclick="setOutcome('save')">✅ Save</button>
+            <button class="toggle-btn" id="btnGoal" onclick="setOutcome('goal')">❌ Goal</button>
+          </div>
+        </div>
+
+        <div>
+          <label>Notes (optional)</label>
+          <input type="text" id="shotNotes" placeholder="e.g. top corner, screened..." maxlength="80" />
+        </div>
+
+        <button class="log-btn" id="logBtn" onclick="logShot()" disabled>Log Shot</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Shot Log -->
+  <div class="card">
+    <h2>Shot Log</h2>
+    <div class="log-table-wrap" id="logWrap">
+      <div class="empty-log" id="emptyMsg">No shots logged yet.<br>Start logging your session above!</div>
+      <table id="logTable" style="display:none;">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Outcome</th>
+            <th>Zone</th>
+            <th>Type</th>
+            <th>Position</th>
+            <th>Notes</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="logBody"></tbody>
+      </table>
+    </div>
+    <button class="clear-btn" onclick="clearAll()">Clear All</button>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+  let shots = [];
+  let selectedOutcome = null;
+  let selectedZone = null;
+  let shotCount = 0;
+
+  const zoneCounts = {
+    'top-left': 0, 'top-center': 0, 'top-right': 0,
+    'bot-left': 0, 'bot-center': 0, 'bot-right': 0
+  };
+
+  // Zone selection
+  document.querySelectorAll('.net-zone').forEach(zone => {
+    zone.addEventListener('click', () => {
+      document.querySelectorAll('.net-zone').forEach(z => {
+        z.classList.remove('selected-save', 'selected-goal');
+      });
+      selectedZone = zone.dataset.zone;
+      const cls = selectedOutcome === 'goal' ? 'selected-goal' : 'selected-save';
+      zone.classList.add(cls);
+    });
+  });
+
+  function setOutcome(type) {
+    selectedOutcome = type;
+    document.getElementById('btnSave').className = 'toggle-btn' + (type === 'save' ? ' active-save' : '');
+    document.getElementById('btnGoal').className = 'toggle-btn' + (type === 'goal' ? ' active-goal' : '');
+    // Update zone colors
+    if (selectedZone) {
+      document.querySelectorAll('.net-zone').forEach(z => z.classList.remove('selected-save', 'selected-goal'));
+      const el = document.querySelector(`[data-zone="${selectedZone}"]`);
+      if (el) el.classList.add(type === 'goal' ? 'selected-goal' : 'selected-save');
+    }
+    checkReady();
+  }
+
+  function checkReady() {
+    document.getElementById('logBtn').disabled = !selectedOutcome;
+  }
+
+  function logShot() {
+    if (!selectedOutcome) return;
+    shotCount++;
+    const shot = {
+      id: shotCount,
+      outcome: selectedOutcome,
+      zone: selectedZone || '—',
+      type: document.getElementById('shotType').value || '—',
+      position: document.getElementById('shotPosition').value || '—',
+      notes: document.getElementById('shotNotes').value || ''
+    };
+    shots.push(shot);
+
+    if (selectedZone && selectedZone !== '—') {
+      zoneCounts[selectedZone]++;
+      document.getElementById('zc-' + selectedZone).textContent = zoneCounts[selectedZone];
+    }
+
+    updateStats();
+    addRow(shot);
+    resetForm();
+    showToast(selectedOutcome === 'save' ? '✅ Save logged!' : '❌ Goal logged');
+  }
+
+  function updateStats() {
+    const total = shots.length;
+    const saves = shots.filter(s => s.outcome === 'save').length;
+    const pct = total > 0 ? Math.round((saves / total) * 100) : null;
+
+    document.getElementById('totalShots').textContent = total;
+    document.getElementById('totalSaves').textContent = saves;
+    document.getElementById('savePercent').textContent = pct !== null ? pct + '%' : '—';
+    document.getElementById('saveBar').style.width = (pct || 0) + '%';
+    document.getElementById('barLabel').textContent = pct !== null ? pct + '% save rate' : 'No shots yet';
+  }
+
+  function addRow(shot) {
+    document.getElementById('emptyMsg').style.display = 'none';
+    document.getElementById('logTable').style.display = 'table';
+    const tbody = document.getElementById('logBody');
+    const tr = document.createElement('tr');
+    tr.id = 'row-' + shot.id;
+    tr.innerHTML = `
+      <td>${shot.id}</td>
+      <td><span class="${shot.outcome === 'save' ? 'badge-save' : 'badge-goal'}">${shot.outcome === 'save' ? 'SAVE' : 'GOAL'}</span></td>
+      <td>${formatZone(shot.zone)}</td>
+      <td>${shot.type}</td>
+      <td>${shot.position}</td>
+      <td style="color:rgba(255,255,255,0.5); font-size:0.8rem;">${shot.notes}</td>
+      <td><button class="delete-btn" onclick="deleteShot(${shot.id})">✕</button></td>
+    `;
+    tbody.prepend(tr);
+  }
+
+  function formatZone(z) {
+    const map = {
+      'top-left': 'Top L', 'top-center': 'Top C', 'top-right': 'Top R',
+      'bot-left': 'Bot L', 'bot-center': 'Bot C', 'bot-right': 'Bot R'
+    };
+    return map[z] || z;
+  }
+
+  function deleteShot(id) {
+    const idx = shots.findIndex(s => s.id === id);
+    if (idx === -1) return;
+    const shot = shots[idx];
+    if (shot.zone && shot.zone !== '—' && zoneCounts[shot.zone] > 0) {
+      zoneCounts[shot.zone]--;
+      document.getElementById('zc-' + shot.zone).textContent = zoneCounts[shot.zone];
+    }
+    shots.splice(idx, 1);
+    const row = document.getElementById('row-' + id);
+    if (row) row.remove();
+    updateStats();
+    if (shots.length === 0) {
+      document.getElementById('emptyMsg').style.display = 'block';
+      document.getElementById('logTable').style.display = 'none';
+    }
+  }
+
+  function clearAll() {
+    if (shots.length === 0) return;
+    if (!confirm('Clear all shot data?')) return;
+    shots = [];
+    shotCount = 0;
+    Object.keys(zoneCounts).forEach(k => { zoneCounts[k] = 0; });
+    document.querySelectorAll('.zone-count').forEach(el => el.textContent = '0');
+    document.getElementById('logBody').innerHTML = '';
+    document.getElementById('emptyMsg').style.display = 'block';
+    document.getElementById('logTable').style.display = 'none';
+    updateStats();
+  }
+
+  function resetForm() {
+    selectedOutcome = null;
+    selectedZone = null;
+    document.getElementById('shotType').value = '';
+    document.getElementById('shotPosition').value = '';
+    document.getElementById('shotNotes').value = '';
+    document.getElementById('btnSave').className = 'toggle-btn';
+    document.getElementById('btnGoal').className = 'toggle-btn';
+    document.querySelectorAll('.net-zone').forEach(z => z.classList.remove('selected-save', 'selected-goal'));
+    document.getElementById('logBtn').disabled = true;
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 1800);
+  }
+</script>
+</body>
+</html>

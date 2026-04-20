@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Résumé | Zion Alburo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream: #faf8f5;
+      --warm-gray: #e8e4de;
+      --charcoal: #2c2c2c;
+      --accent: #7a6c55;
+      --gold: #b89a6a;
+      --light-text: #6b6360;
+    }
+    body { background: var(--cream); color: var(--charcoal); font-family: 'Lato', sans-serif; }
+    .navbar { background: white; border-bottom: 1px solid var(--warm-gray); }
+    .navbar-brand { font-family: 'Playfair Display', serif; font-weight: 900; color: var(--charcoal) !important; }
+    .nav-link { color: var(--light-text) !important; font-weight: 400; letter-spacing: 0.5px; font-size: 0.9rem; text-transform: uppercase; }
+    .nav-link:hover { color: var(--gold) !important; }
+
+    .resume-header { background: var(--charcoal); color: white; padding: 60px 0 50px; }
+    .resume-name { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; }
+    .resume-tagline { color: var(--gold); font-size: 0.9rem; letter-spacing: 3px; text-transform: uppercase; margin-top: 6px; }
+    .resume-meta { color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-top: 16px; }
+
+    .resume-body { background: white; max-width: 860px; margin: 40px auto; padding: 50px 60px; box-shadow: 0 2px 20px rgba(0,0,0,0.07); }
+
+    .section-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--charcoal);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 6px;
+      margin-bottom: 20px;
+      margin-top: 36px;
+    }
+
+    .resume-item { margin-bottom: 22px; }
+    .resume-item-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; }
+    .resume-item-title { font-weight: 700; font-size: 1rem; color: var(--charcoal); }
+    .resume-item-org { color: var(--gold); font-size: 0.88rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; }
+    .resume-item-date { font-size: 0.85rem; color: var(--light-text); white-space: nowrap; }
+    .resume-item-desc { font-size: 0.93rem; color: var(--light-text); line-height: 1.7; margin-top: 6px; }
+    .resume-item-desc ul { margin: 6px 0 0 0; padding-left: 20px; }
+    .resume-item-desc li { margin-bottom: 4px; }
+
+    .skill-pill { background: var(--warm-gray); color: var(--charcoal); padding: 5px 14px; border-radius: 2px; font-size: 0.82rem; display: inline-block; margin: 3px; }
+
+    footer { background: var(--charcoal); color: rgba(255,255,255,0.5); padding: 40px 0; font-size: 0.85rem; text-align: center; }
+    footer a { color: var(--gold); text-decoration: none; }
+
+    @media print {
+      .navbar, footer { display: none; }
+      .resume-body { box-shadow: none; margin: 0; padding: 30px; }
+      .resume-header { padding: 30px 0; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">Zion Alburo</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="resume.html">Résumé</a></li>
+        <li class="nav-item"><a class="nav-link" href="lacrosse.html">Lacrosse</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="resume-header">
+  <div class="container text-center">
+    <div class="resume-name">Zion Alburo</div>
+    <div class="resume-tagline">Business Management · Athlete · Coach</div>
+    <div class="resume-meta">Brigham Young University &nbsp;|&nbsp; Provo, Utah</div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="resume-body">
+
+    <!-- Education -->
+    <div class="section-heading">Education</div>
+    <div class="resume-item">
+      <div class="resume-item-header">
+        <div>
+          <div class="resume-item-title">Bachelor of Science — Business Management</div>
+          <div class="resume-item-org">Brigham Young University</div>
+        </div>
+        <div class="resume-item-date">2024 – Present</div>
+      </div>
+      <div class="resume-item-desc">
+        Provo, Utah · Freshman year · Member of BYU Men's Lacrosse Team
+      </div>
+    </div>
+
+    <!-- Experience -->
+    <div class="section-heading">Experience</div>
+
+    <div class="resume-item">
+      <div class="resume-item-header">
+        <div>
+          <div class="resume-item-title">Starting Goalie</div>
+          <div class="resume-item-org">BYU Men's Lacrosse</div>
+        </div>
+        <div class="resume-item-date">2024 – Present</div>
+      </div>
+      <div class="resume-item-desc">
+        <ul>
+          <li>Played in 15 games as a true freshman goalie</li>
+          <li>Team record: 14–1; opponents include Nevada, Utah, Utah Tech, and UVU</li>
+          <li>Won the Beehive Trophy (BYU vs. University of Utah rivalry)</li>
+          <li>Qualified for both the RMCLA Championship and MCLA Championship (Virginia)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="resume-item">
+      <div class="resume-item-header">
+        <div>
+          <div class="resume-item-title">Assistant Coach & Goalie Trainer</div>
+          <div class="resume-item-org">Maddog North Lacrosse</div>
+        </div>
+        <div class="resume-item-date">2022 – 2024</div>
+      </div>
+      <div class="resume-item-desc">
+        <ul>
+          <li>Served as assistant coach for one of the top club lacrosse programs on the East Coast</li>
+          <li>Developed and led goalie-specific training curricula for high school athletes</li>
+          <li>Conducted individual private lessons and structured group training sessions</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="resume-item">
+      <div class="resume-item-header">
+        <div>
+          <div class="resume-item-title">Personal Trainer & Coach</div>
+          <div class="resume-item-org">East Elite Lacrosse</div>
+        </div>
+        <div class="resume-item-date">2022 – 2024</div>
+      </div>
+      <div class="resume-item-desc">
+        <ul>
+          <li>Provided one-on-one and group training for elite youth lacrosse goalies</li>
+          <li>Designed position-specific drills focused on technique, footwork, and mental composure</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Athletics & Achievements -->
+    <div class="section-heading">Athletic Achievements</div>
+
+    <div class="resume-item">
+      <div class="resume-item-header">
+        <div>
+          <div class="resume-item-title">High School Lacrosse — Goalie</div>
+          <div class="resume-item-org">Record-Breaking Career</div>
+        </div>
+      </div>
+      <div class="resume-item-desc">
+        <ul>
+          <li>Athlete of the Year</li>
+          <li>School record — 57 saves in a single game</li>
+          <li>83% career save percentage</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Skills -->
+    <div class="section-heading">Skills</div>
+    <div>
+      <span class="skill-pill">Athletic Coaching</span>
+      <span class="skill-pill">Personal Training</span>
+      <span class="skill-pill">Team Leadership</span>
+      <span class="skill-pill">Curriculum Development</span>
+      <span class="skill-pill">Business Management</span>
+      <span class="skill-pill">Strategic Planning</span>
+      <span class="skill-pill">Microsoft Office</span>
+      <span class="skill-pill">Public Speaking</span>
+      <span class="skill-pill">Goal Setting</span>
+      <span class="skill-pill">Athlete Development</span>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <p class="mb-1">Zion Alburo &mdash; Business Management, Brigham Young University</p>
+    <p><a href="index.html">Home</a> &nbsp;·&nbsp; <a href="lacrosse.html">Lacrosse</a></p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
